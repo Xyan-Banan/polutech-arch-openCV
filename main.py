@@ -25,8 +25,6 @@ def draw_results(img, results, color, label=()):
 
 
 if __name__ == "__main__":
-    # classifier = CascadeClassifier("venv\Lib\site-packages\cv2\data\haarcascade_frontalface_default.xml")
-    # catClassifier = CascadeClassifier(haarcascades + "haarcascade_frontalcatface.xml")
     facesClassifier = CascadeClassifier(haarcascades + "haarcascade_frontalface_default.xml")
     catClassifier = CascadeClassifier(haarcascades + "haarcascade_frontalcatface_extended.xml")
     dogClassifier = CascadeClassifier("dog_face.xml")
@@ -39,11 +37,6 @@ if __name__ == "__main__":
     success, img = cap.read()
     key = 0
     while success and key != ord('q'):
-        # img = imread("images/cats_and_dogs3.jpg")
-        # h, w, _ = img.shape
-        # w = int(w / (h / 500))
-        # img = resize(img, (w, 500))
-
         # flip to match camera movement
         img = flip(img, 1)
         # resize to improve classifiers speed
@@ -53,19 +46,12 @@ if __name__ == "__main__":
         img = resize(img, (new_w, new_h))
 
         gray = cvtColor(img, COLOR_BGR2GRAY)
-        # wb = Canny(gray,th1,th2)
-        # gray = wb
-        # imshow("WB",wb)
-        # gray = GaussianBlur(gray, (5, 5), 0)
 
         cats = catClassifier.detectMultiScale(gray, minNeighbors=minNeighbors, minSize=(24, 24))
-        # cats2 = catClassifier2.detectMultiScale(gray, minNeighbors=minNeighbors)
         dogs = dogClassifier.detectMultiScale(gray, minNeighbors=minNeighbors, minSize=(24, 24))
         faces = facesClassifier.detectMultiScale(gray, minNeighbors=minNeighbors, minSize=(20, 20))
 
-        # img = GaussianBlur(img, (3, 3), 1)
         img = draw_results(img, cats, Colors.YELLOW, ("cat", labelScale))
-        # img = draw_results(img, cats2, Colors.BLUE, ("cat", labelScale))
         img = draw_results(img, dogs, Colors.RED, ("dog", labelScale))
         img = draw_results(img, faces, Colors.BLACK, ("human", labelScale))
 
@@ -86,20 +72,7 @@ if __name__ == "__main__":
             if minNeighbors > 1:
                 minNeighbors -= 1
                 print(f"scale = {scale}, minNeighbors = {minNeighbors}")
-        # elif key == ord('['):
-        #     th1 += 10
-        #     print(f"th1 = {th1} th2 = {th2}")
-        # elif key == ord(';'):
-        #     th1 -= 10
-        #     print(f"th1 = {th1} th2 = {th2}")
-        # elif key == ord(']'):
-        #     th2 += 10
-        #     print(f"th1 = {th1} th2 = {th2}")
-        # elif key == ord("'"):
-        #     th2 -= 10
-        #     print(f"th1 = {th1} th2 = {th2}")
 
         success, img = cap.read()
-        # success = False
     cap.release()
     destroyAllWindows()
